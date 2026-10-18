@@ -1,8 +1,14 @@
 [gd_scene format=3 uid="uid://dpvwpjknsi3sa"]
 
 [ext_resource type="Script" uid="uid://bedqjkgsnq4f4" path="res://character_body_2d.gd" id="1_wtcfe"]
+[ext_resource type="Script" uid="uid://c1xh80ue8gmop" path="res://gun.gd" id="2_0e48y"]
+[ext_resource type="Script" uid="uid://hee7tmypefya" path="res://enemy.gd" id="3_epypp"]
+[ext_resource type="Script" uid="uid://buel6diahhqiw" path="res://enemy_hp_reduce.gd" id="4_0hol4"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wlb43"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wax55"]
+size = Vector2(29, 28)
 
 [node name="Node2D" type="Node2D" unique_id=657054615]
 
@@ -17,6 +23,9 @@ color = Color(0.28668356, 0.2866836, 0.28668356, 1)
 position = Vector2(45, 47)
 script = ExtResource("1_wtcfe")
 
+[node name="Camera2D" type="Camera2D" parent="CharacterBody2D" unique_id=113814141]
+position = Vector2(-2, 4)
+
 [node name="ColorRect2" type="ColorRect" parent="CharacterBody2D" unique_id=1023742146]
 offset_left = -10.0
 offset_top = -10.0
@@ -24,4 +33,43 @@ offset_right = 10.0
 offset_bottom = 10.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=1763638425]
+physics_interpolation_mode = 1
 shape = SubResource("RectangleShape2D_wlb43")
+
+[node name="gun" type="StaticBody2D" parent="CharacterBody2D" unique_id=1787005448]
+script = ExtResource("2_0e48y")
+
+[node name="ColorRect" type="ColorRect" parent="CharacterBody2D/gun" unique_id=177078233]
+offset_right = 3.0
+offset_bottom = 3.0
+color = Color(0, 0, 0, 1)
+
+[node name="Node2D" type="Node2D" parent="CharacterBody2D/gun" unique_id=1141505688]
+
+[node name="Area2D" type="StaticBody2D" parent="." unique_id=555970002]
+position = Vector2(77, 46)
+collision_layer = 3
+collision_mask = 3
+script = ExtResource("3_epypp")
+
+[node name="ColorRect" type="ColorRect" parent="Area2D" unique_id=1472076184]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+metadata/_edit_use_anchors_ = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D" unique_id=2072443002]
+position = Vector2(-10, -10)
+polygon = PackedVector2Array(19, 1, 19, 19, 1, 19, 1, 1)
+
+[node name="Area2D" type="Area2D" parent="Area2D" unique_id=1443151309]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("4_0hol4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D/Area2D" unique_id=1055323151]
+position = Vector2(1.5, 1)
+shape = SubResource("RectangleShape2D_wax55")
+
+[connection signal="body_entered" from="Area2D/Area2D" to="Area2D/Area2D" method="_on_body_entered"]
