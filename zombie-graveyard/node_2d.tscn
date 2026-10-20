@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://c1xh80ue8gmop" path="res://gun.gd" id="2_0e48y"]
 [ext_resource type="Script" uid="uid://hee7tmypefya" path="res://enemy.gd" id="3_epypp"]
 [ext_resource type="Texture2D" uid="uid://b8q3f23fu5iv7" path="res://zombbie-01-idle.png" id="5_q6r6c"]
+[ext_resource type="Script" uid="uid://ddh2d0ei33wr3" path="res://weapon_bar.gd" id="6_d21ai"]
 [ext_resource type="Texture2D" uid="uid://c1nbso1taaae0" path="res://zombbie-all-moves-001.png" id="6_kdubu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wlb43"]
@@ -275,8 +276,9 @@ metadata/_edit_use_anchors_ = true
 physics_interpolation_mode = 1
 shape = SubResource("RectangleShape2D_wlb43")
 
-[node name="gun" type="StaticBody2D" parent="CharacterBody2D" unique_id=1787005448]
+[node name="gun" type="StaticBody2D" parent="CharacterBody2D" unique_id=1787005448 node_paths=PackedStringArray("weapon_bar")]
 script = ExtResource("2_0e48y")
+weapon_bar = NodePath("../../CanvasLayer/CenterContainer/PanelContainer/HBoxContainer")
 
 [node name="ColorRect" type="ColorRect" parent="CharacterBody2D/gun" unique_id=177078233]
 offset_right = 3.0
@@ -310,6 +312,42 @@ scale = Vector2(0.48437494, 0.9296875)
 sprite_frames = SubResource("SpriteFrames_wlb43")
 animation = &"hitting"
 autoplay = "default"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1537270614]
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer" unique_id=692775818]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/CenterContainer" unique_id=1458306109]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/CenterContainer/PanelContainer" unique_id=908783263]
+layout_mode = 2
+offset_transform_enabled = true
+script = ExtResource("6_d21ai")
+
+[node name="Button" type="Button" parent="CanvasLayer/CenterContainer/PanelContainer/HBoxContainer" unique_id=284204149]
+layout_mode = 2
+focus_mode = 0
+text = "PISTOL"
+
+[node name="Button2" type="Button" parent="CanvasLayer/CenterContainer/PanelContainer/HBoxContainer" unique_id=738065535]
+layout_mode = 2
+focus_mode = 0
+text = "SMG"
+
+[node name="Button3" type="Button" parent="CanvasLayer/CenterContainer/PanelContainer/HBoxContainer" unique_id=471897610]
+layout_mode = 2
+focus_mode = 0
+text = "HEAVY"
 
 [connection signal="body_entered" from="enemy/detection" to="enemy" method="_on_detection_body_entered"]
 [connection signal="body_exited" from="enemy/detection" to="enemy" method="_on_detection_body_exited"]

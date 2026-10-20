@@ -2,8 +2,8 @@
 extends CharacterBody2D
 
 @export var speed: float = 2000.0
-@export var damage: int = 10
 
+var damage: int = 10
 var dir: float = 0.0
 
 
@@ -17,8 +17,6 @@ func _physics_process(delta: float) -> void:
 
 		if target is Node and target.is_in_group("enemies"):
 			if target.has_method("take_damage"):
-				print("Bullet hit enemy!")
 				target.take_damage(damage)
-
 
 		queue_free()
