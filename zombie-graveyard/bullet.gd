@@ -1,16 +1,24 @@
+
 extends CharacterBody2D
 
-var pos: Vector2
-var rota: float 
-var dir: float 
-var speed=2000
+@export var speed: float = 2000.0
+@export var damage: int = 10
 
+var dir: float = 0.0
 
-func _ready():
-	global_position =pos
-	global_rotation=rota
 
 func _physics_process(delta: float) -> void:
-	
-	velocity = Vector2(speed, 0).rotated(dir) 
-	move_and_slide()
+	velocity = Vector2.RIGHT.rotated(dir) * speed
+
+	var collision = move_and_collide(velocity * delta)
+
+	if collision:
+		var target = collision.get_collider()
+
+		if target is Node and target.is_in_group("enemies"):
+			if target.has_method("take_damage"):
+				print("Bullet hit enemy!")
+				target.take_damage(damage)
+
+
+		queue_free()

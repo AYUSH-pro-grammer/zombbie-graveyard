@@ -3,14 +3,13 @@
 [ext_resource type="Script" uid="uid://bedqjkgsnq4f4" path="res://character_body_2d.gd" id="1_wtcfe"]
 [ext_resource type="Script" uid="uid://c1xh80ue8gmop" path="res://gun.gd" id="2_0e48y"]
 [ext_resource type="Script" uid="uid://hee7tmypefya" path="res://enemy.gd" id="3_epypp"]
-[ext_resource type="Script" uid="uid://buel6diahhqiw" path="res://enemy_hp_reduce.gd" id="4_0hol4"]
 [ext_resource type="Texture2D" uid="uid://b8q3f23fu5iv7" path="res://zombbie-01-idle.png" id="5_q6r6c"]
 [ext_resource type="Texture2D" uid="uid://c1nbso1taaae0" path="res://zombbie-all-moves-001.png" id="6_kdubu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wlb43"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wax55"]
-size = Vector2(42, 125)
+size = Vector2(46, 125)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2qul3"]
 size = Vector2(1857, 1185)
@@ -259,6 +258,7 @@ color = Color(0.28668356, 0.2866836, 0.28668356, 1)
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=1184848858 groups=["player"]]
 position = Vector2(45, 47)
+collision_mask = 2
 script = ExtResource("1_wtcfe")
 
 [node name="Camera2D" type="Camera2D" parent="CharacterBody2D" unique_id=113814141]
@@ -288,23 +288,12 @@ metadata/_edit_use_anchors_ = true
 
 [node name="enemy" type="CharacterBody2D" parent="." unique_id=852634934]
 position = Vector2(77, 46)
-collision_layer = 3
-collision_mask = 3
+collision_layer = 2
 script = ExtResource("3_epypp")
 speed = 80.0
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="enemy" unique_id=2072443002]
-position = Vector2(-5.019443, -113.58333)
-scale = Vector2(2.1319447, 6.458333)
-polygon = PackedVector2Array(19.240383, 0.24516106, 19, 19, 1, 19, 0.9472275, 0.24516106)
-
-[node name="bulletCollision" type="Area2D" parent="enemy" unique_id=1443151309]
-collision_layer = 2
-collision_mask = 2
-script = ExtResource("4_0hol4")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="enemy/bulletCollision" unique_id=1055323151]
-position = Vector2(16, -51.5)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="enemy" unique_id=1055323151]
+position = Vector2(18, -51.5)
 shape = SubResource("RectangleShape2D_wax55")
 
 [node name="detection" type="Area2D" parent="enemy" unique_id=749973034]
@@ -322,6 +311,5 @@ sprite_frames = SubResource("SpriteFrames_wlb43")
 animation = &"hitting"
 autoplay = "default"
 
-[connection signal="body_entered" from="enemy/bulletCollision" to="enemy/bulletCollision" method="_on_body_entered"]
 [connection signal="body_entered" from="enemy/detection" to="enemy" method="_on_detection_body_entered"]
 [connection signal="body_exited" from="enemy/detection" to="enemy" method="_on_detection_body_exited"]

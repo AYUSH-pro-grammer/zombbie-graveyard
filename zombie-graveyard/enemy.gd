@@ -20,37 +20,44 @@ var can_attack: bool = true
 
 func _ready() -> void:
 	hp = initialHp
+	add_to_group("enemies")
 	enemySprite.play("idle")
 
 
 func _physics_process(_delta: float) -> void:
-	if is_dead:
-		velocity = Vector2.ZERO
-		move_and_slide()
-		return
-
-	if is_hurt or is_attacking:
+	if is_dead or is_hurt or is_attacking:
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
 
 	if player != null and is_instance_valid(player):
-		var direction: Vector2 = global_position.direction_to(
+		var distance = global_position.distance_to(
 			player.global_position
 		)
 
-		velocity = direction * speed
+		var direction = global_position.direction_to(
+			player.global_position
+		)
+
 		update_facing(direction)
 
-		if global_position.distance_to(player.global_position) <= attack_range:
+		if distance <= attack_range:
 			velocity = Vector2.ZERO
 			move_and_slide()
-			attack()
+
+			if can_attack:
+				attack()
+			elif enemySprite.animation != "idle":
+				enemySprite.play("idle")
+
 			return
+
+		velocity = direction * speed
 
 		if enemySprite.animation != "running":
 			enemySprite.play("running")
 	else:
+		player = null
 		velocity = Vector2.ZERO
 
 		if enemySprite.animation != "idle":
@@ -60,8 +67,6 @@ func _physics_process(_delta: float) -> void:
 
 
 func update_facing(direction: Vector2) -> void:
-	# The sprite faces right by default.
-	# Flip horizontally when moving left.
 	if direction.x < -0.1:
 		enemySprite.flip_h = true
 	elif direction.x > 0.1:
@@ -107,15 +112,13 @@ func attack() -> void:
 
 	enemySprite.play("hitting")
 
-	# Wait for the attack animation to finish.
 	await enemySprite.animation_finished
 
 	if is_dead:
 		return
 
-	# Damage the player if still within attack range.
 	if player != null and is_instance_valid(player):
-		var distance: float = global_position.distance_to(
+		var distance = global_position.distance_to(
 			player.global_position
 		)
 
@@ -125,7 +128,6 @@ func attack() -> void:
 
 	is_attacking = false
 
-	# Cooldown before the next attack.
 	await get_tree().create_timer(attack_cooldown).timeout
 
 	if is_dead:
@@ -147,6 +149,7 @@ func die() -> void:
 	await enemySprite.animation_finished
 
 	queue_free()
+
 
 
 func _on_detection_body_entered(body: Node2D) -> void:
