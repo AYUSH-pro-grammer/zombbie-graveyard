@@ -1,6 +1,8 @@
 
 extends Node2D
 
+@onready var sprite_gun: AnimatedSprite2D = $AnimatedSprite2D
+
 const BULLET_SCENE: PackedScene = preload("res://bullet.tscn")
 
 @export var weapon_bar: Control
@@ -26,8 +28,16 @@ var gun_delay = {
 	3: 0.8
 }
 
+var sprite_name = {
+	1: "pistol",
+	2: "smg",
+	3: "heavy"
+}
+
 
 func _ready() -> void:
+	sprite_gun.play(sprite_name[current_gun])
+
 	if weapon_bar:
 		weapon_bar.update_selection(
 			current_gun,
@@ -54,6 +64,10 @@ func select_gun(index: int) -> void:
 		return
 
 	current_gun = index
+
+	# Change the gun animation.
+	sprite_gun.play(sprite_name[current_gun])
+
 	print("Selected: ", gun_names[current_gun])
 
 	if weapon_bar:
@@ -70,6 +84,7 @@ func fire() -> void:
 	can_fire = false
 
 	var bullet = BULLET_SCENE.instantiate()
+
 	bullet.damage = gun_damage[current_gun]
 	bullet.dir = global_rotation
 	bullet.global_rotation = global_rotation
