@@ -76,7 +76,6 @@ func select_gun(index: int) -> void:
 			gun_names[current_gun]
 		)
 
-
 func fire() -> void:
 	if not can_fire:
 		return
